@@ -69,8 +69,9 @@ $(function() {
     var jqxhr = $.getJSON( "/api/v1/print", function() {
 
     }).always( function() {
-      // Fade the overlay out
-      $("#overlay").fadeOut("slow");
+      setTimeout( function() {
+        $("#overlay").fadeOut("slow");
+      }, 50000);
     });
   });
 });

@@ -22,8 +22,11 @@ from flask import Flask, render_template, Response
 from datetime import datetime
 import json
 import subprocess, os
+import cups
 
 app = Flask(__name__)
+
+global filename
 
 @app.route('/')
 def index():
@@ -31,9 +34,11 @@ def index():
 
 @app.route('/api/v1/preview')
 def update_preview():
+    global filename
+
     time = datetime.now()
     filename = "capture-%04d%02d%02d-%02d%02d%02d.jpg" % (time.year, time.month, time.day, time.hour, time.minute, time.second)
-    process = subprocess.Popen("/opt/vc/bin/raspistill -vf -hf -w 1800 -h 1200 -t 1 --no-preview -o ./static/preview/%s" % filename, shell=True)
+    process = subprocess.Popen("/opt/vc/bin/raspistill -e jpg -vf -hf -w 1800 -h 1200 -t 1 -o ./static/preview/%s" % filename, shell=True)
     process.wait()
 
     data = {
@@ -45,7 +50,25 @@ def update_preview():
 
 @app.route('/api/v1/print')
 def print_preview():
-    return 'Print preview'
+    global filename
+
+    conn = cups.Connection()
+    printers = conn.getPrinters()
+    printer_name = list(printers.keys())[0]
+
+    print("Send %s to %s printer." % (filename, printer_name))
+    data = {}
+
+    printqueuelength = len(conn.getJobs())
+    if(printqueuelength > 1):
+        data["sucess"] = False
+    else:
+        data["success"] = True
+        conn.printFile(printer_name, "./static/preview/%s" % filename, "PhotoBooth", {})
+
+    js = json.dumps(data)
+    resp = Response(js, status=200, mimetype='application/json')
+    return resp
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
