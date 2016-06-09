@@ -3,6 +3,11 @@ html, body {
   height: 100%;
 }
 
+.jumbotron {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
 .overlay {
     position: absolute;
     top: 0;
