@@ -34,20 +34,29 @@ $(function() {
 
   // Preview button handler
   $("#btnPreview").click( function() {
-    // Overlay
-    $("#overlaytext").text("Aperçu en cours d'acquisition ...");
-    $("#overlay").fadeIn("fast");
 
-    // Do the barrel roll
-    var jqxhr = $.getJSON( "/api/v1/preview", function(data) {
-      // Update image source according generate image name
-      $("#preview").attr('src', '/static/preview/' + data.filename);
-      // Store in the localStorage
-      window.localStorage.setItem("lastpreview", data.filename);
-    }).always( function() {
-      // Fade the overlay out
-      $("#overlay").fadeOut("slow");
-    });
+    // Create a countdown
+    var cd = new Countdown(
+      4,
+      document.querySelector('.count'),
+      document.querySelector('#count-template')
+    );
+
+    // Overlay (no fade)
+    $("#countdown").show();
+
+    setTimeout(function() {
+      // Do the barrel roll
+      var jqxhr = $.getJSON( "/api/v1/preview", function(data) {
+        // Update image source according generate image name
+        $("#preview").attr('src', '/static/preview/' + data.filename);
+        // Store in the localStorage
+        window.localStorage.setItem("lastpreview", data.filename);
+      }).always( function() {
+        // Fade the overlay out
+        $("#countdown").fadeOut("slow");
+      });
+    }, 2000);
   });
 
   // Print button handler

@@ -91,10 +91,23 @@
       </div>
     </div>
 
+    <div id="countdown" class="overlay" style="display:none;">
+      <div class="count"></div>
+    </div>
+
+    <script id="count-template" type="text/template">
+     <span class="current top <%= currentSize %>"><%= time %></span>
+     <span class="next top <%= nextSize %>"><%= nextTime %></span>
+     <span class="current bottom <%= currentSize %>"><%= time %></span>
+     <span class="next bottom <%= nextSize %>"><%= nextTime %></span>
+    </script>
+
         <script src="/static/vendor/jquery/dist/jquery.min.js"></script>
+        <script src="/static/vendor/lodash/vendor/underscore/underscore-min.js"></script>
         <script src="/static/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="/static/vendor/screenfull/dist/screenfull.min.js"></script>
         <script src="/static/vendor/fastclick/lib/fastclick.js"></script>
+        <script src="/static/js/countdown.js"></script>
         <script src="/static/js/main.js"></script>
     </body>
 </html>
